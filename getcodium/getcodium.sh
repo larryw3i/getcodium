@@ -24,7 +24,7 @@ if [[ ${_args_} == *\ -h ]] ; then
     return
 fi
 
-# get pkg_ext
+# get pkg_extension
 _release_id_=$(cat /etc/os-release | grep -Eo  '^ID=(\S*)')
 _release_id_=${_release_id_:3}
 _pkg_ext_=$([[ 'ubuntu debian' == *${_release_id_}* ]] && echo "deb" || \

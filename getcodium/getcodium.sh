@@ -77,6 +77,10 @@ if [[ $_sha256sum_check_ == *OK ]]; then
     if $_is_debian_; then
         printf "\nsudo dpkg --install $_pkg_name_\n\n"
         sudo dpkg --install $_pkg_name_
+        [[ $_pkg_name_ == */* ]] && echo "getcodium crashs, exit." && \
+        return
+        [[ $_pkgsha256_name_ == */* ]] && echo "getcodium crashs, exit." && \
+        return
         rm -rf $_pkg_name_ $_pkgsha256_name_
     fi
     echo "codium is installed. HAPPY CODING :-) "

@@ -19,7 +19,7 @@ def run():
 
     # wait for you to contribute the code
     os.system(
-        f'cd {base_path};bash ./getcodium.sh {sys_argv};cd {os.getcwd()}' if
-        system == 'linux' else
+        f'cd {base_path};bash ./getcodium.sh {sys_argv};cd {os.getcwd()}'
+        if system == 'linux' else
         ''
     )

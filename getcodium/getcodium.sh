@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#  _____ _____ ____ _____   _____    _    ____ _   _    ____ ___  ____  _____ 
+# |_   _| ____/ ___|_   _| | ____|  / \  / ___| | | |  / ___/ _ \|  _ \| ____|
+#   | | |  _| \___ \ | |   |  _|   / _ \| |   | |_| | | |  | | | | | | |  _|  
+#   | | | |___ ___) || |   | |___ / ___ \ |___|  _  | | |__| |_| | |_| | |___ 
+#   |_| |_____|____/ |_|   |_____/_/   \_\____|_| |_|  \____\___/|____/|_____|
+                                                                            
+
 _args_=($@) # all parameters from terminal.
 printf "args\n\t${_args_[*]}\n"
 
@@ -15,13 +22,20 @@ do
 done
 if ! $_t_satisfied_; then
     echo "The above is/are not installed, getcodium exit."
-    return
+    exit
 fi
 
+# print mirrors
+print_mirrors(){
+    printf "\ncat ${PWD}/codium.mirrors\n"
+    cat ${PWD}/codium.mirrors
+}
+
 # print help
-if [[ ${_args_} == *\ -h ]] ; then
-    echo ""
-    return
+if [[ ${_args_} == -h ]] ; then
+    printf "use 'gettcodium [mirror_name]' to install codium"
+    print_mirrors
+    exit
 fi
 
 # get pkg_extension
@@ -46,11 +60,19 @@ _processor_=$([[ 'x86_64 amd64'==*${_processor_}* ]] && echo "amd64" || \
 printf "processor\n\t${_processor_}\n"
 
 # specified mirror
-_mirror_=$([[ -n "${_args_}" ]] && echo ${_args_} || echo 'BFSU')
+_mirror_='BFSU'
+if [[ -n ${_args_} ]]; then
+    if  [[ "$(cat codium.mirrors)" == *${_args_}\ * ]]; then
+        _mirror_="${_args_}"
+    else
+        echo "The mirror has been reset and the recorded mirror is following:"
+        print_mirrors
+    fi
+fi
 printf "mirror\n\t${_mirror_}\n"
 
 # get mirror url
-_mirror_url_=$(cat ./codium.mirrors | grep ${_mirror_})
+_mirror_url_=$(cat codium.mirrors | grep ${_mirror_})
 _mirror_url_=(${_mirror_url_})
 _mirror_url_=${_mirror_url_[1]}
 printf "mirror_url\n\t${_mirror_url_}\n"

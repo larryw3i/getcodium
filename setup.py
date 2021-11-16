@@ -4,6 +4,7 @@ import setuptools
 
 from getcodium import __appauthor__, __version__
 
+
 long_description = open("README.md", "r", encoding="utf-8").read()
 
 setuptools.setup(

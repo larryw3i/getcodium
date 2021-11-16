@@ -29,7 +29,7 @@ _i_test(){
 }
 
 tu(){       twine_upload;       }
-its(){       _i_test;           }
+its(){      _i_test;           }
 bdup(){     bdist; tu;          }
 
 ${_args[0]}

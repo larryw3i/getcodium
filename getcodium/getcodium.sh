@@ -68,12 +68,13 @@ _pkgsha256_name_=$(curl $_mirror_url_ | grep $_processor_ | \
     grep -Eo ">\S*.${_pkg_ext_}.sha256<")
 _pkgsha256_name_=${_pkgsha256_name_:1:-1}
 [[ $_pkgsha256_name_ == */* ]] && return
-echo "download ${_pkg_name_}.sha256 . . ."
+echo "download ${_pkgsha256_name_} . . ."
 curl $_mirror_url_$_pkgsha256_name_ -o $_pkgsha256_name_
 
-_sha256sum_check_=$(cat $_pkgsha256_name_ | sha256sum --check)
-
-if [[ $_sha256sum_check_ == *OK ]]; then
+# sha256sum check and install codium
+_sha256sum_check_=$(cat $_pkgsha256_name_ | sha256sum --check | \
+    tr '[:upper:]' '[:lower:]')
+if [[ $_sha256sum_check_ == *ok ]]; then
     if $_is_debian_; then
         printf "\nsudo dpkg --install $_pkg_name_\n\n"
         sudo dpkg --install $_pkg_name_

@@ -5,7 +5,7 @@
 #   | | |  _| \___ \ | |   |  _|   / _ \| |   | |_| | | |  | | | | | | |  _|  
 #   | | | |___ ___) || |   | |___ / ___ \ |___|  _  | | |__| |_| | |_| | |___ 
 #   |_| |_____|____/ |_|   |_____/_/   \_\____|_| |_|  \____\___/|____/|_____|
-                                                                            
+#                                                                            
 
 _args_=($@) # all parameters from terminal.
 printf "args\n\t${_args_[*]}\n"
@@ -33,7 +33,7 @@ print_mirrors(){
 
 # print help
 if [[ ${_args_} == -h ]] ; then
-    printf "use 'gettcodium [mirror_name]' to install codium"
+    printf "use 'getcodium [mirror_name]' to install codium"
     print_mirrors
     exit
 fi
@@ -41,13 +41,18 @@ fi
 # get pkg_extension
 _release_id_=$(cat /etc/os-release | grep -Eo  '^ID=(\S*)')
 _release_id_=${_release_id_:3}
+################################################################################
 _pkg_ext_=$([[ 'ubuntu debian' == *${_release_id_}* ]] && echo "deb" || \
     echo "deb")
+################################################################################
 printf "pkg_ext\n\t${_pkg_ext_}\n"
 
+
+################################################################################
 # is debian?
 [[ $_pkg_ext_ == 'deb' ]] && _is_debian_=true || _is_debian_=false
 printf "is_debian\n\t"; $is_debian && printf 'Y' || printf 'N'; printf "\n"
+################################################################################
 
 # get_kernel
 _kernel_=$(echo `uname -s` | tr '[:upper:]' '[:lower:]')
@@ -55,8 +60,10 @@ printf "kernel\n\t${_kernel_}\n"
 
 # get processor
 _processor_=$(echo `uname -p` | tr '[:upper:]' '[:lower:]')
+################################################################################
 _processor_=$([[ 'x86_64 amd64'==*${_processor_}* ]] && echo "amd64" || \
     echo "amd64")
+################################################################################
 printf "processor\n\t${_processor_}\n"
 
 # specified mirror
@@ -65,7 +72,7 @@ if [[ -n ${_args_} ]]; then
     if  [[ "$(cat codium.mirrors)" == *${_args_}\ * ]]; then
         _mirror_="${_args_}"
     else
-        echo "The mirror has been reset and the recorded mirror is following:"
+        echo "The mirror has been reset, the recorded mirror is following:"
         print_mirrors
     fi
 fi
@@ -97,6 +104,7 @@ curl $_mirror_url_$_pkgsha256_name_ -o $_pkgsha256_name_
 _sha256sum_check_=$(cat $_pkgsha256_name_ | sha256sum --check | \
     tr '[:upper:]' '[:lower:]')
 if [[ $_sha256sum_check_ == *ok ]]; then
+################################################################################
     if $_is_debian_; then
         printf "\nsudo dpkg --install $_pkg_name_\n\n"
         sudo dpkg --install $_pkg_name_
@@ -105,7 +113,9 @@ if [[ $_sha256sum_check_ == *ok ]]; then
         [[ $_pkgsha256_name_ == */* ]] && echo "getcodium crashs, exit." && \
         return
         rm -rf $_pkg_name_ $_pkgsha256_name_
+    # elif true; then
     fi
+################################################################################
     echo "codium is installed. HAPPY CODING :-) "
 else
     echo "sha256sum checking failed! getcodium exit."

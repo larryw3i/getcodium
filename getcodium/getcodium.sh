@@ -60,7 +60,6 @@ printf "kernel\n\t${_kernel_}\n"
 
 # get processor
 _processor_=$(echo `uname -p` | tr '[:upper:]' '[:lower:]')
-_processor_="amd64"
 ################################################################################
 if [[ $_kernel_ == 'linux' ]]; then
     if [[ 'x86_64 amd64'==*${_processor_}* ]]; then

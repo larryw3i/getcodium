@@ -64,6 +64,8 @@ _processor_=$(echo `uname -p` | tr '[:upper:]' '[:lower:]')
 if [[ $_kernel_ == 'linux' ]]; then
     if [[ 'x86_64 amd64' == *${_processor_}* ]]; then
         _processor_="amd64"
+    elif [[ 'aarch64 arm64' == *${_processor_}* ]] && $_is_debian_; then
+        _processor_="arm64"
     # elif
     fi
 # elif

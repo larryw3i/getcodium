@@ -45,7 +45,6 @@ _pkg_ext_=$([[ 'ubuntu debian' == *${_release_id_}* ]] && echo "deb" || \
     echo "deb")
 printf "pkg_ext\n\t${_pkg_ext_}\n"
 
-
 # is debian?
 [[ $_pkg_ext_ == 'deb' ]] && _is_debian_=true || _is_debian_=false
 printf "is_debian\n\t"; $is_debian && printf 'Y' || printf 'N'; printf "\n"
@@ -56,13 +55,16 @@ printf "kernel\n\t${_kernel_}\n"
 
 # get processor
 _processor_=$(echo `uname -p` | tr '[:upper:]' '[:lower:]')
-_processor_="amd64"
 if [[ $_kernel_ == 'linux' ]]; then
-    if [[ 'x86_64 amd64'==*${_processor_}* ]]; then
-        _processor_="amd64"
+    if $_is_debian_; then        
+        if [[ 'x86_64 amd64' == *${_processor_}* ]]; then
+            _processor_="amd64"
+        elif [[ 'aarch64 arm64' == *${_processor_}* ]]; then
+            _processor_="arm64"
+        # elif
+        fi
     # elif
     fi
-# elif
 fi
 printf "processor\n\t${_processor_}\n"
 
@@ -105,8 +107,9 @@ _sha256sum_check_=$(cat $_pkgsha256_name_ | sha256sum --check | \
     tr '[:upper:]' '[:lower:]')
 if [[ $_sha256sum_check_ == *ok ]]; then
     if $_is_debian_; then
-        printf "\nsudo dpkg --install $_pkg_name_\n\n"
-        sudo dpkg --install $_pkg_name_
+        _shell_="sudo dpkg --install $_pkg_name_"
+        printf "\n${_shell_}\n\n"
+        ${_shell_}
         [[ $_pkg_name_ == */* ]] && echo "getcodium crashs, exit." && \
         return
         [[ $_pkgsha256_name_ == */* ]] && echo "getcodium crashs, exit." && \

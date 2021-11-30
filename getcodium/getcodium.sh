@@ -27,8 +27,9 @@ fi
 
 # print mirrors
 print_mirrors(){
-    printf "\ncat ${PWD}/codium.mirrors\n"
-    cat ${PWD}/codium.mirrors
+    cat_mirrors_sh="cat ${PWD}/codium.mirrors"
+    printf "\n${cat_mirrors_sh}\n"
+    ${cat_mirrors_sh}
 }
 
 # print help
@@ -106,6 +107,7 @@ curl $_mirror_url_$_pkgsha256_name_ -o $_pkgsha256_name_
 _sha256sum_check_=$(cat $_pkgsha256_name_ | sha256sum --check | \
     tr '[:upper:]' '[:lower:]')
 if [[ $_sha256sum_check_ == *ok ]]; then
+    # _is_debian_
     if $_is_debian_; then
         _shell_="sudo dpkg --install $_pkg_name_"
         printf "\n${_shell_}\n\n"

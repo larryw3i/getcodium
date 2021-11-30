@@ -41,18 +41,14 @@ fi
 # get pkg_extension
 _release_id_=$(cat /etc/os-release | grep -Eo  '^ID=(\S*)')
 _release_id_=${_release_id_:3}
-################################################################################
 _pkg_ext_=$([[ 'ubuntu debian' == *${_release_id_}* ]] && echo "deb" || \
     echo "deb")
-################################################################################
 printf "pkg_ext\n\t${_pkg_ext_}\n"
 
 
-################################################################################
 # is debian?
 [[ $_pkg_ext_ == 'deb' ]] && _is_debian_=true || _is_debian_=false
 printf "is_debian\n\t"; $is_debian && printf 'Y' || printf 'N'; printf "\n"
-################################################################################
 
 # get_kernel
 _kernel_=$(echo `uname -s` | tr '[:upper:]' '[:lower:]')
@@ -61,7 +57,6 @@ printf "kernel\n\t${_kernel_}\n"
 # get processor
 _processor_=$(echo `uname -p` | tr '[:upper:]' '[:lower:]')
 _processor_="amd64"
-################################################################################
 if [[ $_kernel_ == 'linux' ]]; then
     if [[ 'x86_64 amd64'==*${_processor_}* ]]; then
         _processor_="amd64"
@@ -69,7 +64,6 @@ if [[ $_kernel_ == 'linux' ]]; then
     fi
 # elif
 fi
-################################################################################
 printf "processor\n\t${_processor_}\n"
 
 # specified mirror
@@ -110,7 +104,6 @@ curl $_mirror_url_$_pkgsha256_name_ -o $_pkgsha256_name_
 _sha256sum_check_=$(cat $_pkgsha256_name_ | sha256sum --check | \
     tr '[:upper:]' '[:lower:]')
 if [[ $_sha256sum_check_ == *ok ]]; then
-################################################################################
     if $_is_debian_; then
         printf "\nsudo dpkg --install $_pkg_name_\n\n"
         sudo dpkg --install $_pkg_name_
@@ -121,7 +114,6 @@ if [[ $_sha256sum_check_ == *ok ]]; then
         rm -rf $_pkg_name_ $_pkgsha256_name_
     # elif true; then
     fi
-################################################################################
     echo "codium is installed. HAPPY CODING :-) "
 else
     echo "sha256sum checking failed! getcodium exit."

@@ -103,23 +103,32 @@ _pkgsha256_name_=${_pkgsha256_name_:1:-1}
 echo "download ${_pkgsha256_name_} . . ."
 curl $_mirror_url_$_pkgsha256_name_ -o $_pkgsha256_name_
 
+print_greeting(){
+    echo "codium is installed. HAPPY CODING :-) "
+}
+
 # sha256sum check and install codium
 _sha256sum_check_=$(cat $_pkgsha256_name_ | sha256sum --check | \
     tr '[:upper:]' '[:lower:]')
 if [[ $_sha256sum_check_ == *ok ]]; then
+    
+    # default
+    _shell_="sudo dpkg --install $_pkg_name_"
+
     # _is_debian_
     if $_is_debian_; then
-        _shell_="sudo dpkg --install $_pkg_name_"
-        printf "\n${_shell_}\n\n"
-        ${_shell_}
         [[ $_pkg_name_ == */* ]] && echo "getcodium crashs, exit." && \
         return
         [[ $_pkgsha256_name_ == */* ]] && echo "getcodium crashs, exit." && \
         return
-        rm -rf $_pkg_name_ $_pkgsha256_name_
     # elif true; then
     fi
-    echo "codium is installed. HAPPY CODING :-) "
+
+    # install
+    printf "\n${_shell_}\n\n"
+    ${_shell_}
+    rm -rf $_pkg_name_ $_pkgsha256_name_
+
 else
     echo "sha256sum checking failed! getcodium exit."
 fi

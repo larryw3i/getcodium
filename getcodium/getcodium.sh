@@ -126,7 +126,7 @@ if [[ $_sha256sum_check_ == *ok ]]; then
 
     # install
     printf "\n${_shell_}\n\n"
-    ${_shell_}
+    ${_shell_} && print_greeting
     rm -rf $_pkg_name_ $_pkgsha256_name_
 
 else
